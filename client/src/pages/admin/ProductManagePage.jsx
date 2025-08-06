@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../Navbar";
 import { Link, useNavigate } from "react-router-dom";
-
-const API_BASE_URL = "http://localhost:5000/api";
+import { API_BASE_URL } from "../../config/api";
 
 function ProductManagePage() {
   const [products, setProducts] = useState([]);

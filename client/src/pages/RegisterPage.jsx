@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../config/api";
 
 function RegisterPage() {
   const [form, setForm] = useState({
@@ -51,7 +52,7 @@ function RegisterPage() {
     }
     // 회원가입 요청
     try {
-      const res = await fetch("http://localhost:5000/api/users", {
+      const res = await fetch(`${API_BASE_URL}/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

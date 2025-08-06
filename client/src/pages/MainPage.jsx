@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
+import { API_BASE_URL } from "../config/api";
 
 const categories = [
   { label: "Dresses" },
@@ -8,8 +9,6 @@ const categories = [
   { label: "Bottoms" },
   { label: "Outerwear" },
 ];
-
-const API_BASE_URL = "http://localhost:5000/api";
 
 function MainPage() {
   const [user, setUser] = useState(null);
@@ -24,7 +23,7 @@ function MainPage() {
     if (!token) return;
     (async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/users/me", {
+        const res = await fetch(`${API_BASE_URL}/users/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.ok) {

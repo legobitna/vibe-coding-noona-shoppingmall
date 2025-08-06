@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import Navbar from "./Navbar";
-
-const API_BASE_URL = "http://localhost:5000/api";
+import { API_BASE_URL } from "../config/api";
 
 const sizes = ["XS", "S", "M", "L", "XL"];
 const colors = [
@@ -31,7 +30,7 @@ function ProductDetailPage() {
     if (!token) return;
     (async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/users/me", {
+        const res = await fetch(`${API_BASE_URL}/users/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.ok) {

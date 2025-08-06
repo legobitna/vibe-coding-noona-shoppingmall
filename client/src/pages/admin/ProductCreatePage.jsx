@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../Navbar";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../../config/api";
 
 const categories = ["상의", "하의", "악세사리"];
 
@@ -54,7 +55,7 @@ function ProductCreatePage() {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/products", {
+      const res = await fetch(`${API_BASE_URL}/products`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
