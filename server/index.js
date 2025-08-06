@@ -16,13 +16,47 @@ const MONGO_URI =
 app.use(express.json());
 
 // CORS 설정 - production 환경에서는 프론트엔드 도메인만 허용
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:5173", // Vite dev server
+  "https://vibe-coding-noona-shoppingmall.vercel.app", // 실제 프론트엔드 URL
+  process.env.FRONTEND_URL,
+].filter(Boolean); // undefined 값 제거
+
+console.log("Allowed CORS origins:", allowedOrigins);
+console.log("Environment - NODE_ENV:", process.env.NODE_ENV);
+console.log("Environment - FRONTEND_URL:", process.env.FRONTEND_URL);
+
 const corsOptions = {
-  origin:
-    process.env.NODE_ENV === "production"
-      ? process.env.FRONTEND_URL || "https://your-vercel-app.vercel.app"
-      : "http://localhost:3000",
+  origin: function (origin, callback) {
+    console.log("CORS check - Incoming origin:", origin);
+
+    // Allow requests with no origin (mobile apps, etc.)
+    if (!origin) {
+      console.log("No origin - allowing request");
+      return callback(null, true);
+    }
+
+    // Check if origin is in allowed origins
+    const isAllowed = allowedOrigins.some((allowedOrigin) => {
+      const match = origin === allowedOrigin;
+      console.log(`Checking ${origin} against ${allowedOrigin}: ${match}`);
+      return match;
+    });
+
+    if (isAllowed) {
+      console.log("Origin allowed:", origin);
+      callback(null, true);
+    } else {
+      console.log("CORS blocked origin:", origin);
+      console.log("Allowed origins:", allowedOrigins);
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
   optionsSuccessStatus: 200,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 app.use(cors(corsOptions));
@@ -37,6 +71,12 @@ mongoose
 
 app.get("/", (req, res) => {
   res.send("쇼핑몰 데모 서버가 실행 중입니다.");
+});
+
+// CORS 디버깅을 위한 미들웨어
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path} - Origin: ${req.get("Origin")}`);
+  next();
 });
 
 app.use("/api/users", userRouter);
